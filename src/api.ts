@@ -1,5 +1,5 @@
 const API_KEY = '41a142f4baa7549a2342ceb301f607e8bbd21592699a6d220b6b922906275aac'
-//const socket = new WebSocket(`wss://streamer.cryptocompare.com/v2?api_key=${API_KEY}`)
+const RECONNECT_DELAY = 10000
 let socket: WebSocket | null = null
 const handlers = new Map<string, Function[]>()
 
@@ -37,9 +37,9 @@ function createSocketConnection() {
   })
 
   socket.addEventListener('close', () => {
-    console.warn('Socket closed. Reconnecting in 10s')
+    console.warn(`Socket closed. Reconnecting in ${RECONNECT_DELAY / 1000}s`)
     socket = null
-    setTimeout(createSocketConnection, 10000)
+    setTimeout(createSocketConnection, RECONNECT_DELAY)
   })
 
   socket.addEventListener('error', (e) => {
