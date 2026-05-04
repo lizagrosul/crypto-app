@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useCryptoStore } from '@/stores/crypto'
 import IconAdd from '@/components/icons/IconAdd.vue'
 import IconTrash from '@/components/icons/IconTrash.vue'
+import TickerCard from '@/components/TickerCard.vue'
 
 const cryptoStore = useCryptoStore()
 const { tickers } = storeToRefs(cryptoStore)
@@ -48,21 +49,8 @@ function onSubmit() {
     <template v-if="tickers.length">
       <hr class="w-full border-t border-gray-600 my-4" />
 
-      <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <div
-          v-for="t in tickers"
-          :key="t.name"
-          class="bg-white overflow-hidden shadow rounded-lg border-solid cursor-pointer"
-        >
-          <div class="px-4 py-5 sm:p-6 text-center">
-            <dt class="text-sm font-medium text-gray-500 truncate">{{ t.name }} - USD</dt>
-
-            <dd class="mt-1 text-3xl font-semibold text-gray-900">
-              {{ t.price }}
-            </dd>
-          </div>
-
-          <div class="w-full border-t border-gray-200"></div>
+      <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <TickerCard v-for="t in tickers" :key="t.name" :name="t.name" :price="t.price">
           <button
             @click.stop="removeTicker(t.name)"
             class="flex items-center justify-center font-medium w-full bg-gray-100 px-4 py-4 sm:px-6 text-md text-gray-500 hover:text-gray-600 hover:bg-gray-200 transition-all focus:outline-none"
@@ -70,8 +58,8 @@ function onSubmit() {
             <IconTrash />
             Remove
           </button>
-        </div>
-      </dl>
+        </TickerCard>
+      </div>
       <hr class="w-full border-t border-gray-600 my-4" />
     </template>
   </div>

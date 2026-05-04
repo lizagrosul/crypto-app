@@ -1,7 +1,8 @@
 const API_KEY = '41a142f4baa7549a2342ceb301f607e8bbd21592699a6d220b6b922906275aac'
 const RECONNECT_DELAY = 10000
 let socket: WebSocket | null = null
-const handlers = new Map<string, Function[]>()
+type PriceHandler = (price: number) => void
+const handlers = new Map<string, PriceHandler[]>()
 
 interface TickerData {
   TYPE: string
@@ -58,9 +59,7 @@ function sendToSocket(message: object) {
   }
 }
 
-export const subscribeToTicker = (ticker: string, cb: Function) => {
-  if (!cb) return
-
+export const subscribeToTicker = (ticker: string, cb: PriceHandler) => {
   const subscribers = handlers.get(ticker) || []
   if (subscribers.length === 0 && socket?.readyState === WebSocket.OPEN) {
     sendToSocket({
